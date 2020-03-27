@@ -8,7 +8,7 @@ int main(void) {
 	std::int64_t key = 1234567890;
 	std::cout << "Key:";
 	std::cout << key;
-	std::string string_to_store = "This is a string";
+	std::string string_to_store = "aaaa";
 	std::cout << "String to store:";
 	std::cout << string_to_store;
     store_data(key, string_to_store);
