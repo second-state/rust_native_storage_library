@@ -12,8 +12,9 @@ pub extern "C" fn store_data(_key: i64, _value: String) {
 	opts.increase_parallelism(3);
     opts.create_if_missing(true);
     println!("Database options are set");
-    //println!("Processing CString value: {:?}", _value);
+    println!("Processing String value: {:?}", _value);
     let _value_as_cstring = CString::new(_value).expect("CString::new failed");
+    println!("CString value: {:?}", _value_as_cstring);
     let value_as_string = _value_as_cstring.into_string().expect("into_string() call failed");
     println!("CString value as string: {:?}", value_as_string);
     db.put(_key.to_string(), value_as_string).unwrap();
