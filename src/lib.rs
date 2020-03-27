@@ -11,7 +11,7 @@ pub extern "C" fn store_data(_key: i64, _value: CString) {
 	let mut opts = Options::default();
 	opts.increase_parallelism(3);
     opts.create_if_missing(true);
-    println!("Database options: {:?}", opts);
+    println!("Database options are set");
     let value_as_string = _value.into_string().expect("into_string() call failed");
     db.put(_key.to_string(), value_as_string).unwrap();
 }
