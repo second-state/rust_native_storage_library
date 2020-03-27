@@ -12,8 +12,9 @@ pub extern "C" fn store_data(_key: i64, _value: CString) {
 	opts.increase_parallelism(3);
     opts.create_if_missing(true);
     println!("Database options are set");
-    println!("Processing CString value: {:?}", _value);
+    //println!("Processing CString value: {:?}", _value);
     let value_as_string = _value.into_string().expect("into_string() call failed");
+    println!("CString value as string: {:?}", value_as_string);
     db.put(_key.to_string(), value_as_string).unwrap();
 }
 // Returns C-compatible, nul-terminated string with no nul bytes in the middle
