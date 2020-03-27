@@ -3,6 +3,7 @@ use std::ffi::{CString};
 
 #[no_mangle]
 pub extern "C" fn store_data(_key: i64, _value: String) {
+	println!("Processing String value: {:?}", _value);
 	println!("Storing data");
 	let path = "/media/nvme/ssvm_database";
 	println!("Database path: {:?}", path);
