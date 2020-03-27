@@ -59,5 +59,6 @@ int main(void) {
 ```
 ## Compilation and linking
 ```
-g++ -o cpp-example implementation_examples/main.cpp -L target/release/ -librust_native_storage_library.dylib -v
+g++ -c -o cpp-example implementation_examples/main.cpp
+g++ cpp-example target/x86_64-unknown-linux-gnu/release/librust_native_storage_library.so
 ```

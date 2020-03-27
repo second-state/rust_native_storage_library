@@ -1,6 +1,6 @@
 use rocksdb::{DB, Options};
 use std::ffi::{CString};
-/*
+
 #[no_mangle]
 pub extern "C" fn store_data(_key: &i64, _value: CString) {
 	let path = "/media/nvme/ssvm_database";
@@ -8,10 +8,8 @@ pub extern "C" fn store_data(_key: &i64, _value: CString) {
 	let mut opts = Options::default();
 	opts.increase_parallelism(3);
     opts.create_if_missing(true);
-
-	//DB::put(&db, _key, _value).unwrap();
+    db::put(_key, _value).unwrap();
 }
-*/
 // Returns C-compatible, nul-terminated string with no nul bytes in the middle
 #[no_mangle]
 pub extern "C" fn load_data(_key: &i64) -> CString {
