@@ -5,7 +5,9 @@ use std::ffi::{CString};
 pub extern "C" fn store_data(_key: i64, _value: CString) {
 	println!("Storing data");
 	let path = "/media/nvme/ssvm_database";
+	println!("Database path: {:?}", path);
 	let db = DB::open_default(path).unwrap();
+	println!("Database instance: {:?}", db);
 	let mut opts = Options::default();
 	opts.increase_parallelism(3);
     opts.create_if_missing(true);
