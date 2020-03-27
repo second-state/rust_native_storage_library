@@ -6,7 +6,7 @@ extern "C" std::string load_data(std::int64_t);
 
 int main(void) {
 	std::int64_t key = 1234567890;
-	std::cout << "Key":;
+	std::cout << "Key:";
 	std::cout << key;
 	std::string string_to_store = "This is a string!";
 	std::cout << "String to store:";
