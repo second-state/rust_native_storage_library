@@ -2,8 +2,7 @@ extern crate libc;
 
 use rocksdb::{DB, Options};
 use std::ffi::{CString, CStr};
-use std::os::raw::c_char;
-
+use libc::c_char;
 
 #[no_mangle]
 pub extern "C" fn store_data(_key: i64, _value: *const c_char) {
@@ -53,5 +52,17 @@ pub extern "C" fn load_data(_key: i64) {
     //println!("DB Value as String: {:?}", db_value_as_string);
 	//let db_value_as_cstring = CString::new(db_value_as_vec);
 	//db_value_as_cstring
+}
+
+#[no_mangle]
+pub extern "C" fn how_many_characters(s: *const c_char) -> u32 {
+    let c_str = unsafe {
+        assert!(!s.is_null());
+
+        CStr::from_ptr(s)
+    };
+
+    let r_str = c_str.to_str().unwrap();
+    r_str.chars().count() as u32
 }
 

@@ -1,4 +1,5 @@
 #include <string>
+#include <cstring>
 #include <iostream>
 
 extern "C" void store_data(std::int64_t, std::string);
@@ -13,7 +14,7 @@ int main(void) {
 	std::string string_to_store = "aaaa";
 	std::cout << "String to store:";
 	std::cout << string_to_store;
-    store_data(key, string_to_store);
+    store_data(key, string_to_store.c_str());
     //std::string loaded_string = load_data(key);
     load_data(key);
     //std::cout << "Loaded string:";
