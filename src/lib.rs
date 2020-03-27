@@ -6,14 +6,14 @@ use libc::c_char;
 
 #[no_mangle]
 pub extern "C" fn store_data(_key: i64, _value: *const c_char) {
-	//let _value_as_cstring = CStr::from_bytes_with_nul(b"foo\0").expect("CStr::from_bytes_with_nul failed");
-	
+	let _value_as_cstring = CStr::from_bytes_with_nul(b"fooie\0").expect("CStr::from_bytes_with_nul failed");
+	/*
 	println!("Value as const char: {:?}", _value);
     let _value_as_cstring = unsafe {
 	    assert!(!_value.is_null());
 	    CStr::from_ptr(_value)
     }; 
-    
+    */
     println!("Value as CString: {:?}", _value_as_cstring);
     let _value_as_string = _value_as_cstring.to_str().unwrap();
 	println!("value_as_string: {:?}", _value_as_string);
@@ -52,6 +52,9 @@ pub extern "C" fn load_data(_key: i64) {
     //println!("DB Value as String: {:?}", db_value_as_string);
 	//let db_value_as_cstring = CString::new(db_value_as_vec);
 	//db_value_as_cstring
+
+    //let c_str = CString::new(to).unwrap();
+    //let c_world: *const c_char = c_str.as_ptr() as *const c_char;
 }
 
 #[no_mangle]
