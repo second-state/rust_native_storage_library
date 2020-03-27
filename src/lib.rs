@@ -2,7 +2,7 @@ use rocksdb::{DB, Options};
 use std::ffi::{CString};
 
 #[no_mangle]
-pub extern "C" fn store_data(_key: i64, _value: CString) {
+pub extern "C" fn store_data(_key: i64, _value: String) {
 	println!("Storing data");
 	let path = "/media/nvme/ssvm_database";
 	println!("Database path: {:?}", path);
@@ -13,7 +13,8 @@ pub extern "C" fn store_data(_key: i64, _value: CString) {
     opts.create_if_missing(true);
     println!("Database options are set");
     //println!("Processing CString value: {:?}", _value);
-    let value_as_string = _value.into_string().expect("into_string() call failed");
+    let _value_as_cstring = CString::new(_value).expect("CString::new failed");
+    let value_as_string = _value_as_cstring.into_string().expect("into_string() call failed");
     println!("CString value as string: {:?}", value_as_string);
     db.put(_key.to_string(), value_as_string).unwrap();
 }
