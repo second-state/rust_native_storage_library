@@ -2,7 +2,7 @@ extern crate libc;
 
 use rocksdb::{DB, Options};
 use std::ffi::{CString, CStr};
-use libc::c_char;
+use std::os::raw::c_char;
 
 
 #[no_mangle]
