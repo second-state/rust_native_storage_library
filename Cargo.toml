@@ -12,3 +12,4 @@ rocksdb = "0.13.0"
 [lib]
 name = "rust_native_storage_library"
 crate-type = ["cdylib"]
+path = "src/lib.rs"
