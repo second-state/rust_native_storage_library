@@ -1,9 +1,18 @@
+extern crate libc;
+
 use rocksdb::{DB, Options};
-use std::ffi::{CString};
+use std::ffi::{CString, CStr};
+use libc::c_char;
+
 
 #[no_mangle]
-pub extern "C" fn store_data(_key: i64, _value: &str) {
-	println!("Processing String value: {:?}", &_value);
+pub extern "C" fn store_data(_key: i64, _value: *const c_char) {
+    let _value_as_cstring = unsafe {
+	    assert!(!_value.is_null());
+	    CStr::from_ptr(_value)
+    };
+    let _value_as_string = _value_as_cstring.to_str().unwrap();
+	println!("value_as_string: {:?}", _value_as_string);
 	println!("Storing data");
 	let path = "/media/nvme/ssvm_database";
 	println!("Database path: {:?}", path);
@@ -13,12 +22,7 @@ pub extern "C" fn store_data(_key: i64, _value: &str) {
 	opts.increase_parallelism(3);
     opts.create_if_missing(true);
     println!("Database options are set");
-    println!("Processing String value: {:?}", _value);
-    let _value_as_cstring = CString::new(_value).expect("CString::new failed");
-    println!("CString value: {:?}", _value_as_cstring);
-    let value_as_string = _value_as_cstring.into_string().expect("into_string() call failed");
-    println!("CString value as string: {:?}", value_as_string);
-    db.put(_key.to_string(), value_as_string).unwrap();
+    db.put(_key.to_string(), _value_as_string).unwrap();
 }
 // Returns C-compatible, nul-terminated string with no nul bytes in the middle
 #[no_mangle]
