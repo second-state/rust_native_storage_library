@@ -31,15 +31,27 @@ pub extern "C" fn store_data(_key: i64, _value: *const c_char) {
     println!("Item added to database");
 }
 // Returns C-compatible, nul-terminated string with no nul bytes in the middle
+// https://doc.rust-lang.org/stable/std/ffi/struct.CString.html#method.into_raw
 #[no_mangle]
-pub extern "C" fn load_data(_key: i64) -> CString {
+pub extern "C" fn load_data(_key: i64) {
 	println!("Loading data");
 	let path = "/media/nvme/ssvm_database";
+	println!("Database path: {:?}", path);
 	let db = DB::open_default(path).unwrap();
+	println!("Database instance: {:?}", db);
 	let mut opts = Options::default();
-	opts.increase_parallelism(3);	
-    let db_value_as_vec = db.get(_key.to_string()).unwrap();
-    println!("DB Value as Vec: {:?}", db_value_as_vec);
-	let db_value_as_cstring = CString::new(db_value_as_vec.unwrap()).expect("CString::new failed");
-	db_value_as_cstring
+	opts.increase_parallelism(3);
+	println!("Database options are set");
+    match db.get(_key.to_string()) {
+        Ok(Some(value)) => println!("retrieved value {}", String::from_utf8(value).unwrap()),
+        Ok(None) => println!("value not found"),
+        Err(e) => println!("operational problem encountered: {}", e), 
+   }
+
+    //let db_value_as_vec = db.get(_key.to_string());
+    //let db_value_as_string = String::from_utf8(db_value_as_vec.unwrap().unwrap());
+    //println!("DB Value as String: {:?}", db_value_as_string);
+	//let db_value_as_cstring = CString::new(db_value_as_vec);
+	//db_value_as_cstring
 }
+
