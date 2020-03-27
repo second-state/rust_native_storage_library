@@ -66,7 +66,7 @@ mkdir /media/nvme/ssvm_database
 
 Install system requirements
 ```
-sudo apt-get -y install devscripts debhelper build-essential fakeroot zlib1g-dev libbz2-dev libsnappy-dev libgflags-dev libzstd-dev
+sudo apt-get -y install devscripts debhelper build-essential fakeroot zlib1g-dev libbz2-dev libsnappy-dev libgflags-dev libzstd-dev make clang pkg-config libssl-dev
 ```
 Install RocksDB
 ```
