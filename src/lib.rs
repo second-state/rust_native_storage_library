@@ -28,6 +28,7 @@ pub extern "C" fn store_data(_key: i64, _value: *const c_char) {
     opts.create_if_missing(true);
     println!("Database options are set");
     db.put(_key.to_string(), _value_as_string).unwrap();
+    println!("Item added to database");
 }
 // Returns C-compatible, nul-terminated string with no nul bytes in the middle
 #[no_mangle]
@@ -37,8 +38,8 @@ pub extern "C" fn load_data(_key: i64) -> CString {
 	let db = DB::open_default(path).unwrap();
 	let mut opts = Options::default();
 	opts.increase_parallelism(3);	
-    let db_value_as_vec = db.get(_key.to_string()).unwrap().unwrap();
+    let db_value_as_vec = db.get(_key.to_string()).unwrap();
     println!("DB Value as Vec: {:?}", db_value_as_vec);
-	let db_value_as_cstring = CString::new(db_value_as_vec).expect("CString::new failed");
+	let db_value_as_cstring = CString::new(db_value_as_vec.unwrap()).expect("CString::new failed");
 	db_value_as_cstring
 }
