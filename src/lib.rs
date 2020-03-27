@@ -7,6 +7,7 @@ use libc::c_char;
 
 #[no_mangle]
 pub extern "C" fn store_data(_key: i64, _value: *const c_char) {
+	println!("Value as const char: {:?}", _value);
     let _value_as_cstring = unsafe {
 	    assert!(!_value.is_null());
 	    CStr::from_ptr(_value)
