@@ -11,6 +11,7 @@ pub extern "C" fn store_data(_key: i64, _value: *const c_char) {
 	    assert!(!_value.is_null());
 	    CStr::from_ptr(_value)
     };
+    println!("Value as CString: {:?}", _value_as_cstring);
     let _value_as_string = _value_as_cstring.to_str().unwrap();
 	println!("value_as_string: {:?}", _value_as_string);
 	println!("Storing data");
