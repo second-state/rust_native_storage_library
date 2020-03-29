@@ -84,11 +84,30 @@ opts.create_if_missing(true);
 ```
 
 # Compiling rust_native_storage_library to system level executables
-
+Fetch this software
 ```
+cd ~
+git clone https://github.com/second-state/rust_native_storage_library.git
+```
+Add this target to your system
+```
+rustup target add x86_64-unknown-linux-gnu
+```
+Edit your Cargo conf file
+# `~/.cargo/conf`
+```
+[target.x86_64-unknown-linux-gnu]
+linker = "x86_64-unknown-linux-gnu-gcc"
+```
+Build
+```
+cd ~/rust_native_storage_library
+cargo build --release --target x86_64-unknown-linux-gnu
 ```
 
 # Testing the executables
 
 ```
+cd ~/rust_native_storage_library
+python3.6 implementation_examples/python_implementation.py
 ```
