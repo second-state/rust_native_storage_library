@@ -105,7 +105,7 @@ cargo build --release --target x86_64-unknown-linux-gnu
 ```
 
 # Testing the executables
-
+You can just run the following Python file to test this software. You will notice that the location of the dynamic library is already configured in the Python file. If you want to call this from other applications, please note that the library is built (and can therefore be found) in the following location `~/rust_native_storage_library/target/x86_64-unknown-linux-gnu/release/librust_native_storage_library.so`
 ```
 cd ~/rust_native_storage_library
 python3.6 implementation_examples/python_implementation.py
