@@ -5,13 +5,20 @@ use rocksdb::{Options, DB};
 use std::ffi::{CStr, CString};
 
 #[no_mangle]
-pub extern "C" fn store_data(_key: i64, _value: *const c_char) {
+pub extern "C" fn store_data(_key: *const c_char, _value: *const c_char) {
     let c_str = unsafe {
         assert!(!_value.is_null());
 
         CStr::from_ptr(_value)
     };
     let _value_as_string = c_str.to_str().unwrap();
+    
+    let c_str_key = unsafe {
+        assert!(!_key.is_null());
+
+        CStr::from_ptr(_key)
+    };
+    let _key_as_string = c_str_key.to_str().unwrap();
     //println!("value_as_string: {:?}", _value_as_string);
     println!("Storing data");
     let path = "/media/nvme/ssvm_database";
@@ -22,12 +29,18 @@ pub extern "C" fn store_data(_key: i64, _value: *const c_char) {
     opts.increase_parallelism(3);
     opts.create_if_missing(true);
     //println!("Database options are set");
-    db.put(_key.to_string(), _value_as_string).unwrap();
+    db.put(_key_as_string, _value_as_string).unwrap();
     println!("Item added to database");
 }
 
 #[no_mangle]
-pub extern "C" fn load_data(_key: i64) -> *mut c_char {
+pub extern "C" fn load_data(_key: *const c_char) -> *mut c_char {
+    let c_str_key = unsafe {
+        assert!(!_key.is_null());
+
+        CStr::from_ptr(_key)
+    };
+    let _key_as_string = c_str_key.to_str().unwrap();
     println!("Loading data");
     let path = "/media/nvme/ssvm_database";
     //println!("Database path: {:?}", path);
@@ -36,7 +49,7 @@ pub extern "C" fn load_data(_key: i64) -> *mut c_char {
     let mut opts = Options::default();
     opts.increase_parallelism(3);
     //println!("Database options are set");
-    let db_value_as_vec = db.get(_key.to_string()).unwrap().unwrap();
+    let db_value_as_vec = db.get(_key_as_string).unwrap().unwrap();
     let db_value_as_cstring = CString::new(db_value_as_vec).unwrap();
     //println!("Value as CString: {:?}", db_value_as_cstring);
     db_value_as_cstring.into_raw()
