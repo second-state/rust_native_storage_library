@@ -93,8 +93,7 @@ Add this target to your system
 ```
 rustup target add x86_64-unknown-linux-gnu
 ```
-Edit your Cargo conf file
-# `~/.cargo/conf`
+Edit your ~/.cargo/conf file
 ```
 [target.x86_64-unknown-linux-gnu]
 linker = "x86_64-unknown-linux-gnu-gcc"
