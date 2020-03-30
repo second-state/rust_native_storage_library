@@ -103,8 +103,36 @@ Build
 cd ~/rust_native_storage_library
 cargo build --release --target x86_64-unknown-linux-gnu
 ```
+Check the newly compiled dynamic library to see if functions have been successfully exported
+```
+nm --defined-only  -D target/x86_64-unknown-linux-gnu/release/librust_native_storage_library.so
+```
+As you can see, our Rust code has made the following functions available via the `.so`
+```
+0000000000043ea0 T free
+0000000000043b30 T load_data
+0000000000043700 T store_data
+```
+## Testing the executables, call using C++
+If you want to call these functions from within a C++ application, please use the following method.
+Write the following C++ code which will provide you with access to the `.so` functions.
+```
 
-# Testing the executables
+```
+Compile this C++ code using the following command
+```
+g++ -g implementation_examples/c++_implementation.cpp -o c++_implementation -lrust_native_storage_library -Ltarget/x86_64-unknown-linux-gnu/release
+
+```
+Allow the linker to find the dynamic library (update the standard paths for shared libs)
+```
+LD_LIBRARY_PATH=target/x86_64-unknown-linux-gnu/release ldd c++_implementation
+```
+Execute the Rust code via the `.so` via our C++_implementation
+```
+LD_LIBRARY_PATH=target/x86_64-unknown-linux-gnu/release ./c++_implementation
+```
+## Testing the executables, call using Python
 You can just run the following Python file to test this software. You will notice that the location of the dynamic library is already configured in the Python file. If you want to call this from other applications, please note that the library is built (and can therefore be found) in the following location `~/rust_native_storage_library/target/x86_64-unknown-linux-gnu/release/librust_native_storage_library.so`
 ```
 cd ~/rust_native_storage_library
