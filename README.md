@@ -116,9 +116,6 @@ As you can see, our Rust code has made the following functions available via the
 ## Testing the executables, call using C++
 If you want to call these functions from within a C++ application, please use the following method.
 Write the following C++ code which will provide you with access to the `.so` functions.
-```
-
-```
 Compile this C++ code using the following command
 ```
 g++ -m64 -g implementation_examples/c++_implementation.cpp -o c++_implementation -lrust_native_storage_library -Ltarget/x86_64-unknown-linux-gnu/release
