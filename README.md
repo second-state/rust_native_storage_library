@@ -121,16 +121,12 @@ Write the following C++ code which will provide you with access to the `.so` fun
 ```
 Compile this C++ code using the following command
 ```
-g++ -g implementation_examples/c++_implementation.cpp -o c++_implementation -lrust_native_storage_library -Ltarget/x86_64-unknown-linux-gnu/release
+g++ -m64 -g implementation_examples/c++_implementation.cpp -o c++_implementation -lrust_native_storage_library -Ltarget/x86_64-unknown-linux-gnu/release
 
 ```
-Allow the linker to find the dynamic library (update the standard paths for shared libs)
+Execute by providing both the path to the `.so` and the compiled executable `c++_implementation`
 ```
-LD_LIBRARY_PATH=target/x86_64-unknown-linux-gnu/release ldd c++_implementation
-```
-Execute the Rust code via the `.so` via our C++_implementation
-```
-LD_LIBRARY_PATH=target/x86_64-unknown-linux-gnu/release ./c++_implementation
+/lib64/ld-linux-x86-64.so.2 target/x86_64-unknown-linux-gnu/release/librust_native_storage_library.so c++_implementation 
 ```
 ## Testing the executables, call using Python
 You can just run the following Python file to test this software. You will notice that the location of the dynamic library is already configured in the Python file. If you want to call this from other applications, please note that the library is built (and can therefore be found) in the following location `~/rust_native_storage_library/target/x86_64-unknown-linux-gnu/release/librust_native_storage_library.so`
