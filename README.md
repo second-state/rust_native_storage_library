@@ -128,9 +128,40 @@ Execute by providing both the path to the `.so` and the compiled executable `c++
 ```
 /lib64/ld-linux-x86-64.so.2 target/x86_64-unknown-linux-gnu/release/librust_native_storage_library.so c++_implementation 
 ```
+If you have any issues with the execution and want to read a comprehensive log of the execution please use the following method instead.
+Install valgrind
+```
+sudo apt  install valgrind
+```
+Execute as valgrind
+```
+valgrind -v /lib64/ld-linux-x86-64.so.2 target/x86_64-unknown-linux-gnu/release/librust_native_storage_library.so c++_implementation 
+
+```
 ## Testing the executables, call using Python
 You can just run the following Python file to test this software. You will notice that the location of the dynamic library is already configured in the Python file. If you want to call this from other applications, please note that the library is built (and can therefore be found) in the following location `~/rust_native_storage_library/target/x86_64-unknown-linux-gnu/release/librust_native_storage_library.so`
 ```
 cd ~/rust_native_storage_library
 python3.6 implementation_examples/python_implementation.py
+```
+## Testing RocksDB via the command line
+Fetch the source code
+```
+git clone https://github.com/facebook/rocksdb.git
+```
+Build the cli tool called ldb
+```
+cd rocksdb
+make ldb
+```
+Check that the Python implementation above worked
+```
+ubuntu@ip-172-31-13-152:~/rocksdb$ ./ldb --db=/media/nvme/ssvm_database get 1111111111
+This is a string stored in relation to the key 1111111111
+```
+Store and load key:value pairs via the command line
+```bash
+./ldb --db=/media/nvme/ssvm_database --create_if_missing put a1 b1
+./ldb --db=/media/nvme/ssvm_database get a1
+# returns b1
 ```
