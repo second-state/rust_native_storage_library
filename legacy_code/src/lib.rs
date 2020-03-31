@@ -1,12 +1,12 @@
 extern crate libc;
-extern crate cc;
+
+use cmake;
 use libc::c_char;
 use rocksdb::{Options, DB};
 use std::ffi::{CStr, CString};
 
 #[no_mangle]
 pub extern "C" fn store_data(_key: *const c_char, _value: *const c_char) {
-//pub extern "C" fn store_data() {
 	println!("Storing data, please wait ...");
     let c_str = unsafe {
         assert!(!_value.is_null());
@@ -56,12 +56,11 @@ pub extern "C" fn load_data(_key: *const c_char) -> *mut c_char {
 }
 
 #[no_mangle]
-pub extern "C" fn free_pointer(s: *mut c_char) {
+pub extern "C" fn free(s: *mut c_char) {
     unsafe {
         if s.is_null() {
             return;
         }
         CString::from_raw(s)
     };
-
 }

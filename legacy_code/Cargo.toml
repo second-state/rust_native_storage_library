@@ -11,8 +11,9 @@ rocksdb = "0.13.0"
 libc = "0.2.68"
 bindgen = "0.53.2"
 cmake = "0.1.42"
-cc = "1.0.50"
 
+[package]
+links = "rust_native_storage_library"
 
 [lib]
 name = "rust_native_storage_library"
