@@ -1,11 +1,10 @@
-extern crate libc;
 extern crate cc;
-use std::slice;
-use libc::{c_char};
+extern crate libc;
+use libc::c_char;
 use rocksdb::{Options, DB};
 use std::ffi::{CStr, CString};
+use std::slice;
 
-//pub extern "C" fn store_bytes(_key: *const c_char, _buffer_address: *const c_char, _length: size_t){
 #[no_mangle]
 pub extern "C" fn store_bytes(_key: *const c_char, _value: *const c_char) {
     let c_str_key = unsafe {
@@ -23,8 +22,9 @@ pub extern "C" fn store_bytes(_key: *const c_char, _value: *const c_char) {
     println!("Database path: {:?}", path);
     let db = DB::open_default(path).unwrap();
     println!("Database instance: {:?}", db);
-    db.put(c_str_key.to_bytes(), c_str_value.to_bytes()).unwrap();
-    println!("Item added to database"); 
+    db.put(c_str_key.to_bytes(), c_str_value.to_bytes())
+        .unwrap();
+    println!("Item added to database");
 }
 
 #[no_mangle]
@@ -36,15 +36,17 @@ pub extern "C" fn load_bytes(_key: *const c_char) -> *mut c_char {
     };
     println!("Loading data, please wait ...");
     let path = "/media/nvme/ssvm_database";
-    println!("Database path: {:?}", path);  
+    println!("Database path: {:?}", path);
     let db = DB::open_default(path).unwrap();
     println!("Database instance: {:?}", db);
-    CString::new(db.get(c_str_key.to_bytes()).unwrap().unwrap()).unwrap().into_raw()
+    CString::new(db.get(c_str_key.to_bytes()).unwrap().unwrap())
+        .unwrap()
+        .into_raw()
 }
 
 #[no_mangle]
 pub extern "C" fn store_data(_key: *const c_char, _value: *const c_char) {
-	println!("Storing data, please wait ...");
+    println!("Storing data, please wait ...");
     let c_str = unsafe {
         assert!(!_value.is_null());
 
@@ -72,7 +74,7 @@ pub extern "C" fn store_data(_key: *const c_char, _value: *const c_char) {
 
 #[no_mangle]
 pub extern "C" fn load_data(_key: *const c_char) -> *mut c_char {
-	println!("Loading data, please wait ...");
+    println!("Loading data, please wait ...");
     let c_str_key = unsafe {
         assert!(!_key.is_null());
 
@@ -80,7 +82,7 @@ pub extern "C" fn load_data(_key: *const c_char) -> *mut c_char {
     };
     let _key_as_string = c_str_key.to_str().unwrap();
     let path = "/media/nvme/ssvm_database";
-    //println!("Database path: {:?}", path);*  
+    //println!("Database path: {:?}", path);*
     let db = DB::open_default(path).unwrap();
     //println!("Database instance: {:?}", db);
     let mut opts = Options::default();
@@ -100,5 +102,4 @@ pub extern "C" fn free_pointer(s: *mut c_char) {
         }
         CString::from_raw(s)
     };
-
 }

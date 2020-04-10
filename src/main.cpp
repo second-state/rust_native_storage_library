@@ -34,6 +34,7 @@ int main()
     string loaded_string = loaded_pointer;
     cout << "Retrieved the following string: " << loaded_string << endl;
     free_pointer(loaded_pointer);
+
     
     return 0;
 }
