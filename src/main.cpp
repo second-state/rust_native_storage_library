@@ -10,6 +10,7 @@ int main()
 {
     // Setting up example key and value
     cout << "Starting main function ..." << endl;
+    
     // i64 equivalent     
     signed long long var64bit = 1234567111;
     cout << "i64 variable as integer: " << var64bit << endl;
@@ -34,6 +35,30 @@ int main()
     string loaded_string = loaded_pointer;
     cout << "Retrieved the following string: " << loaded_string << endl;
     free_pointer(loaded_pointer);
+
+    // Calling store bytes
+    signed long long var64bit_2 = 1111111111;
+    cout << "i64 variable as integer: " << var64bit_2 << endl;
+    string var64bitString_2 = to_string(var64bit_2);
+    cout << "i64 variable as string: " << var64bitString_2 << endl;
+    char const *str64_2 = var64bitString_2.data();
+    cout << "i64 variable as char: " << str64_2 << endl;
+    // i32 equivalent
+    signed int var32bit_2 = 1111111112;
+    cout << "i32 variable as integer: " << var32bit_2 << endl;
+    string var32bitString_2 = to_string(var32bit_2);
+    cout << "i32 variable as string: " << var32bitString_2 << endl;
+    char const *str32_2 = var32bitString_2.data();
+    cout << "i32 variable as char: " << str32_2 << endl;
+    
+    // Calling store data
+    cout << "Calling store bytes ... " << endl;
+    store_bytes(str64_2, str32_2);
+    cout << "Calling load bytes ... " << var32bit_2 << endl;
+    char *loaded_pointer_2 = load_bytes(str64_2);
+    string loaded_string_2 = loaded_pointer_2;
+    cout << "Retrieved the following data: " << loaded_string_2 << endl;
+    free_pointer(loaded_pointer_2);
 
     
     return 0;

@@ -1,9 +1,32 @@
 extern crate cc;
 extern crate libc;
-use libc::c_char;
-use rocksdb::{Options, DB};
+use libc::{c_char, uint32_t, size_t};
+use rocksdb::{Options, DB, DBPinnableSlice};
 use std::ffi::{CStr, CString};
 use std::slice;
+
+#[no_mangle]
+pub extern "C" fn store_byte_array(_key_array_pointer: *const libc::uint32_t, _key_size: libc::size_t, _value_array_pointer: *const libc::uint32_t, _value_size: libc::size_t) {
+    let _key = unsafe {
+        assert!(!_key_array_pointer.is_null());
+
+        std::slice::from_raw_parts(_key_array_pointer as *const i32, _key_size as usize;
+    };
+    let _value = unsafe {
+        assert!(!_value_array_pointer.is_null());
+
+        std::slice::from_raw_parts(_value_array_pointer as *const i32, _value_size as usize;
+
+    };
+    println!("Storing data, please wait ...");
+    let path = "/media/nvme/ssvm_database";
+    println!("Database path: {:?}", path);
+    let db = DB::open_default(path).unwrap();
+    println!("Database instance: {:?}", db);
+    db.put(_key, _value
+        .unwrap();
+    println!("Item added to database");
+}
 
 #[no_mangle]
 pub extern "C" fn store_bytes(_key: *const c_char, _value: *const c_char) {
