@@ -10,12 +10,12 @@ pub extern "C" fn store_byte_array(_key_array_pointer: *const uintptr_t, _key_si
     let _key = unsafe {
         assert!(!_key_array_pointer.is_null());
 
-        std::slice::from_raw_parts(_key_array_pointer as *const i32, _key_size as usize;
+        std::slice::from_raw_parts(_key_array_pointer as *const u32, _key_size as usize;
     };
     let _value = unsafe {
         assert!(!_value_array_pointer.is_null());
 
-        std::slice::from_raw_parts(_value_array_pointer as *const i32, _value_size as usize;
+        std::slice::from_raw_parts(_value_array_pointer as *const u32, _value_size as usize;
 
     };
     println!("Storing data, please wait ...");
@@ -32,23 +32,29 @@ pub extern "C" fn load_byte_array(_key_array_pointer: *const uintptr_t, _key_siz
     let _key = unsafe {
         assert!(!_key.is_null());
 
-        std::slice::from_raw_parts(_key_array_pointer as *const i32, _key_size as usize;
+        std::slice::from_raw_parts(_key_array_pointer as *const u32, _key_size as usize;
     };
     println!("Loading data, please wait ...");
     let path = "/media/nvme/ssvm_database";
     println!("Database path: {:?}", path);
     let db = DB::open_default(path).unwrap();
     println!("Database instance: {:?}", db);
-    let ptr: *mut uintptr_t = db.get(_key).unwrap().as_ptr();
+    let loaded_data = db.get(_key).unwrap();
+    println!("Loaded data: {:?}", loaded_data);
+    let ptr: *const uintptr_t = loaded_data.as_ptr();
+    println!("Pointer: {:?}", ptr);
+    let size: size_t = loaded_data.len();
+    println!("Size: {:?}", size);
     ptr
 }
 
 #[no_mangle]
-pub extern "C" fn free_byte_array_pointer(s: *mut uintptr_t) {
+pub extern "C" fn free_byte_array_pointer(s: *const uintptr_t) {
     unsafe {
         if s.is_null() {
             return;
         }
+        // TODO find best way to deallocate pointer now that we are not using CStr but raw pointer
         CString::from_raw(s)
     };
 }
