@@ -1,12 +1,12 @@
 extern crate cc;
 extern crate libc;
-use libc::{c_char, uint32_t, size_t};
+use libc::{c_char, uint32_t, size_t, uintptr_t};
 use rocksdb::{Options, DB, DBPinnableSlice};
 use std::ffi::{CStr, CString};
 use std::slice;
 
 #[no_mangle]
-pub extern "C" fn store_byte_array(_key_array_pointer: *const libc::uint32_t, _key_size: libc::size_t, _value_array_pointer: *const libc::uint32_t, _value_size: libc::size_t) {
+pub extern "C" fn store_byte_array(_key_array_pointer: *const uintptr_t, _key_size: size_t, _value_array_pointer: *const uintptr_t, _value_size: size_t) {
     let _key = unsafe {
         assert!(!_key_array_pointer.is_null());
 
@@ -23,11 +23,38 @@ pub extern "C" fn store_byte_array(_key_array_pointer: *const libc::uint32_t, _k
     println!("Database path: {:?}", path);
     let db = DB::open_default(path).unwrap();
     println!("Database instance: {:?}", db);
-    db.put(_key, _value
-        .unwrap();
+    db.put(_key, _value).unwrap();
     println!("Item added to database");
 }
 
+#[no_mangle]
+pub extern "C" fn load_byte_array(_key_array_pointer: *const uintptr_t, _key_size: size_t) -> *mut uintptr_t {
+    let _key = unsafe {
+        assert!(!_key.is_null());
+
+        std::slice::from_raw_parts(_key_array_pointer as *const i32, _key_size as usize;
+    };
+    println!("Loading data, please wait ...");
+    let path = "/media/nvme/ssvm_database";
+    println!("Database path: {:?}", path);
+    let db = DB::open_default(path).unwrap();
+    println!("Database instance: {:?}", db);
+    let ptr: *mut uintptr_t = db.get(_key).unwrap().as_ptr();
+    ptr
+}
+
+#[no_mangle]
+pub extern "C" fn free_byte_array_pointer(s: *mut uintptr_t) {
+    unsafe {
+        if s.is_null() {
+            return;
+        }
+        CString::from_raw(s)
+    };
+}
+
+
+/*
 #[no_mangle]
 pub extern "C" fn store_bytes(_key: *const c_char, _value: *const c_char) {
     let c_str_key = unsafe {
@@ -126,3 +153,4 @@ pub extern "C" fn free_pointer(s: *mut c_char) {
         CString::from_raw(s)
     };
 }
+*/
