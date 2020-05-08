@@ -20,12 +20,12 @@ pub extern "C" fn store_byte_array(
     let key = unsafe {
         assert!(!key_array_pointer.is_null());
 
-        slice::from_raw_parts(key_array_pointer, key_size as usize)
+        slice::from_raw_parts(key_array_pointer as *const _, key_size as usize)
     };
     let value = unsafe {
         assert!(!value_array_pointer.is_null());
 
-        slice::from_raw_parts(value_array_pointer, value_size as usize)
+        slice::from_raw_parts(value_array_pointer as *const _, value_size as usize)
     };
     //println!("Key from raw parts has a type of: {:?}", type_of(key));
     println!("Storing data, please wait ...");
@@ -48,7 +48,7 @@ pub extern "C" fn get_byte_array_pointer(
     let _key = unsafe {
         assert!(!_key_array_pointer.is_null());
 
-        slice::from_raw_parts(_key_array_pointer, _key_size as usize)
+        slice::from_raw_parts(_key_array_pointer as *const _, _key_size as usize)
     };
     println!("Loading data, please wait ...");
     let path = "/media/nvme/ssvm_database";
@@ -72,7 +72,7 @@ pub extern "C" fn get_byte_array_length(
     let _key = unsafe {
         assert!(!_key_array_pointer.is_null());
 
-        slice::from_raw_parts(_key_array_pointer, _key_size as usize)
+        slice::from_raw_parts(_key_array_pointer as *const _, _key_size as usize)
     };
     println!("Loading data, please wait ...");
     let path = "/media/nvme/ssvm_database";
