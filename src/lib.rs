@@ -37,7 +37,7 @@ pub extern "C" fn get_byte_array_pointer(
     let path = "/media/nvme/ssvm_database";
     let db = DB::open_default(path).unwrap();
     let loaded_data = db.get(&key).unwrap();
-    let ptr: *mut c_char = loaded_data.unwrap().as_ptr() as *mut i8;
+    let ptr: *mut c_char = loaded_data.unwrap().as_ptr() as *mut _;
     ptr
 }
 
