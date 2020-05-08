@@ -1,11 +1,11 @@
 use libc::size_t;
 use rocksdb::DB;
+use std::alloc::{dealloc, Layout};
 use std::convert::TryInto;
 use std::ffi::CString;
 use std::os::raw::c_char;
-use std::slice;
-use std::alloc::{dealloc, Layout};
 use std::ptr;
+use std::slice;
 
 #[no_mangle]
 pub extern "C" fn store_byte_array(
