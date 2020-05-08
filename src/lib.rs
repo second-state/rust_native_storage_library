@@ -35,7 +35,7 @@ pub extern "C" fn store_byte_array(
 }
 
 #[no_mangle]
-pub extern "C" fn load_byte_array(
+pub extern "C" fn get_byte_array_pointer(
     _key_array_pointer: *const c_char,
     _key_size: uint32_t,
 ) -> *mut c_char {
@@ -53,9 +53,29 @@ pub extern "C" fn load_byte_array(
     println!("Loaded data: {:?}", loaded_data);
     let ptr: *const c_char = loaded_data.as_ptr();
     println!("Pointer: {:?}", ptr);
+    ptr
+}
+
+#[no_mangle]
+pub extern "C" fn get_byte_array_length(
+    _key_array_pointer: *const c_char,
+    _key_size: uint32_t,
+) -> uint32_t {
+    let _key = unsafe {
+        assert!(!_key.is_null());
+
+        std::slice::from_raw_parts(_key_array_pointer as *const c_char, _key_size as uint32_t);
+    };
+    println!("Loading data, please wait ...");
+    let path = "/media/nvme/ssvm_database";
+    println!("Database path: {:?}", path);
+    let db = DB::open_default(path).unwrap();
+    println!("Database instance: {:?}", db);
+    let loaded_data = db.get(_key).unwrap();
+    println!("Loaded data: {:?}", loaded_data);
     let size: uint32_t = loaded_data.len();
     println!("Size: {:?}", size);
-    ptr
+    size
 }
 
 #[no_mangle]
