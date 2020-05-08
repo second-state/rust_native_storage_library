@@ -36,11 +36,10 @@ pub extern "C" fn get_byte_array_pointer(
     };
     let path = "/media/nvme/ssvm_database";
     let db = DB::open_default(path).unwrap();
-    //let loaded_data = db.get(&key).unwrap();
-    //let ptr: *mut c_char = loaded_data.unwrap().as_ptr() as *mut _;
     let loaded_data = db.get(&key).unwrap();
     let ptr = loaded_data.as_ref().unwrap().as_ptr() as *mut _;
-    ptr
+    let box_ptr = unsafe { Box::from_raw(ptr) };
+    *box_ptr
 }
 
 #[no_mangle]
@@ -65,7 +64,8 @@ pub extern "C" fn free_byte_array_pointer(s: *mut c_char) {
         if s.is_null() {
             return;
         }
-        CString::from_raw(s)
+        let new_box = unsafe { Box::from_raw(s) };
+        Box::into_raw(new_box);
     };
 }
 
