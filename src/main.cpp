@@ -23,9 +23,21 @@ int main()
     // Get the byte array pointer
     char *Ptr = get_byte_array_pointer(reinterpret_cast<char *>(&(Key2[0])), Key2.size());
     std::copy_n(Ptr, Len, std::back_inserter(Val2));
+
+    // Print the pointer
     printf("Ptr    = %p\n", (void *) Ptr);
+
+    // Print the values     
+    for (auto &PtrVal : Val2) {
+        printf("0x%02x ", PtrVal);
+    }
+
     // Free the pointer
     free_byte_array_pointer(Ptr);
+
+    // Try and access the pointer again after free
+        // Print the pointer
+    printf("Pointer is now free:    = %p\n", (void *) Ptr);
 
     //  Check actual values
     std::vector<uint8_t> Key3 = {0x03, 0x02, 0x01, 0x00, 0xFF, 0x00};
