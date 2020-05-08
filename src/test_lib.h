@@ -17,9 +17,9 @@ extern "C"{
 //void free_pointer(char *);
 
 // New store/load (using byte array pointer and length)
-void store_byte_array(const char *_key_array_pointer, uint32_t _key_size, const char *_value_array_pointer, uint32_t _value_size);
-char * get_byte_array_pointer(const char *_key_array_pointer, uint32_t _key_size);
-uint32_t get_byte_array_length(const char *_key_array_pointer, uint32_t _key_size);
+void store_byte_array(const char *_key_array_pointer, size_t _key_size, const char *_value_array_pointer, size_t _value_size);
+char * get_byte_array_pointer(const char *_key_array_pointer, size_t _key_size);
+size_t get_byte_array_length(const char *_key_array_pointer, size_t _key_size);
 
 // New free pointer for the byte array approach
 void free_byte_array_pointer(char *);

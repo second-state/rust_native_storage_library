@@ -10,6 +10,7 @@ edition = "2018"
 rocksdb = "0.13.0"
 bindgen = "0.53.2"
 cmake = "0.1.42"
+libc = "0.2.69"
 
 
 [lib]
