@@ -61,7 +61,7 @@ pub extern "C" fn get_byte_array_pointer(
     println!("Database instance: {:?}", db);
     let loaded_data = db.get(_key).unwrap();
     println!("Loaded data: {:?}", loaded_data);
-    let ptr: *mut c_char = loaded_data.unwrap().as_ptr();
+    let ptr: *mut c_char = loaded_data.unwrap().as_ptr() as *mut i8;
     println!("Pointer: {:?}", ptr);
     ptr
 }
