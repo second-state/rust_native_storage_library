@@ -1,8 +1,14 @@
 extern crate cc;
 extern crate libc;
-use libc::{c_char, uint32_t};
-use rocksdb::{DBPinnableSlice, Options, DB};
+use libc::{uint32_t};
+use rocksdb::{DB};
 use std::convert::TryInto;
+use std::ffi::{CStr, CString};
+use std::os::raw::c_char
+
+fn type_of<T>(_: T) -> &'static str {
+    type_name::<T>()
+}
 
 #[no_mangle]
 pub extern "C" fn store_byte_array(
@@ -50,7 +56,7 @@ pub extern "C" fn get_byte_array_pointer(
     println!("Database instance: {:?}", db);
     let loaded_data = db.get(_key).unwrap();
     println!("Loaded data: {:?}", loaded_data);
-    let ptr: *const c_char = loaded_data.unwrap().as_ptr();
+    let mut ptr: *const c_char = loaded_data.unwrap().as_ptr();
     println!("Pointer: {:?}", ptr);
     ptr
 }
