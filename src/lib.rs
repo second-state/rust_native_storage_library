@@ -2,6 +2,7 @@ extern crate cc;
 extern crate libc;
 use libc::{c_char, uint32_t};
 use rocksdb::{DBPinnableSlice, Options, DB};
+use std::convert::TryInto;
 
 #[no_mangle]
 pub extern "C" fn store_byte_array(
@@ -49,7 +50,7 @@ pub extern "C" fn get_byte_array_pointer(
     println!("Database instance: {:?}", db);
     let loaded_data = db.get(_key).unwrap();
     println!("Loaded data: {:?}", loaded_data);
-    let ptr: *const c_char = loaded_data.as_ptr();
+    let ptr: *const c_char = loaded_data.unwrap().as_ptr();
     println!("Pointer: {:?}", ptr);
     ptr
 }
@@ -71,13 +72,13 @@ pub extern "C" fn get_byte_array_length(
     println!("Database instance: {:?}", db);
     let loaded_data = db.get(_key).unwrap();
     println!("Loaded data: {:?}", loaded_data);
-    let size: uint32_t = loaded_data.unwrap().len();
+    let size: uint32_t = loaded_data.unwrap().len().try_into().unwrap();
     println!("Size: {:?}", size);
     size
 }
 
 #[no_mangle]
-pub extern "C" fn free_byte_array_pointer(s: *const c_char) {
+pub extern "C" fn free_byte_array_pointer(s: *mut c_char) {
     unsafe {
         if s.is_null() {
             return;
