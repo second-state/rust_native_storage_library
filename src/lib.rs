@@ -1,26 +1,29 @@
 extern crate cc;
 extern crate libc;
-use libc::{c_char, size_t, uint32_t, uintptr_t};
+use libc::{c_char, uint32_t};
 use rocksdb::{DBPinnableSlice, Options, DB};
 use std::ffi::{CStr, CString};
 use std::slice;
 
 #[no_mangle]
 pub extern "C" fn store_byte_array(
-    _key_array_pointer: *const uintptr_t,
-    _key_size: size_t,
-    _value_array_pointer: *const uintptr_t,
-    _value_size: size_t,
+    _key_array_pointer: *const c_char,
+    _key_size: uint32_t,
+    _value_array_pointer: *const c_char,
+    _value_size: uint32_t,
 ) {
     let _key = unsafe {
         assert!(!_key_array_pointer.is_null());
 
-        std::slice::from_raw_parts(_key_array_pointer as *const u32, _key_size as usize);
+        std::slice::from_raw_parts(_key_array_pointer as *const c_char, _key_size as uint32_t);
     };
     let _value = unsafe {
         assert!(!_value_array_pointer.is_null());
 
-        std::slice::from_raw_parts(_value_array_pointer as *const u32, _value_size as usize);
+        std::slice::from_raw_parts(
+            _value_array_pointer as *const c_char,
+            _value_size as uint32_t,
+        );
     };
     println!("Storing data, please wait ...");
     let path = "/media/nvme/ssvm_database";
@@ -33,13 +36,13 @@ pub extern "C" fn store_byte_array(
 
 #[no_mangle]
 pub extern "C" fn load_byte_array(
-    _key_array_pointer: *const uintptr_t,
-    _key_size: size_t,
-) -> *mut uintptr_t {
+    _key_array_pointer: *const c_char,
+    _key_size: uint32_t,
+) -> *mut c_char {
     let _key = unsafe {
         assert!(!_key.is_null());
 
-        std::slice::from_raw_parts(_key_array_pointer as *const u32, _key_size as usize);
+        std::slice::from_raw_parts(_key_array_pointer as *const c_char, _key_size as uint32_t);
     };
     println!("Loading data, please wait ...");
     let path = "/media/nvme/ssvm_database";
@@ -48,20 +51,20 @@ pub extern "C" fn load_byte_array(
     println!("Database instance: {:?}", db);
     let loaded_data = db.get(_key).unwrap();
     println!("Loaded data: {:?}", loaded_data);
-    let ptr: *const uintptr_t = loaded_data.as_ptr();
+    let ptr: *const c_char = loaded_data.as_ptr();
     println!("Pointer: {:?}", ptr);
-    let size: size_t = loaded_data.len();
+    let size: uint32_t = loaded_data.len();
     println!("Size: {:?}", size);
     ptr
 }
 
 #[no_mangle]
-pub extern "C" fn free_byte_array_pointer(s: *const uintptr_t) {
+pub extern "C" fn free_byte_array_pointer(s: *const c_char) {
     unsafe {
         if s.is_null() {
             return;
         }
-        // TODO find best way to deallocate pointer now that we are not using CStr but raw pointer
+        // TODO find best way to deallocate pointer
         CString::from_raw(s)
     };
 }
