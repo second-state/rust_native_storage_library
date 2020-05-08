@@ -32,9 +32,10 @@ int main()
     for (auto &PtrVal : Val2) {
         printf("0x%02x ", PtrVal);
     }
-
     // Free the pointer
     free_byte_array_pointer(Ptr);
+
+    printf("\n");
 
     // Try and access the pointer again after free
         // Print the pointer
