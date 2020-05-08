@@ -19,7 +19,7 @@ pub extern "C" fn store_byte_array(
     _value_array_pointer: *const c_char,
     _value_size: c_uint,
 ) {
-    let mut _key: slice = unsafe {
+    let _key = unsafe {
         assert!(!_key_array_pointer.is_null());
 
         std::slice::from_raw_parts(
@@ -27,7 +27,7 @@ pub extern "C" fn store_byte_array(
             (_key_size as c_uint).try_into().unwrap(),
         );
     };
-    let mut _value: slice = unsafe {
+    let _value = unsafe {
         assert!(!_value_array_pointer.is_null());
 
         std::slice::from_raw_parts(
@@ -41,7 +41,7 @@ pub extern "C" fn store_byte_array(
     println!("Database path: {:?}", path);
     let db = DB::open_default(path).unwrap();
     println!("Database instance: {:?}", db);
-    db.put(_key.as_ref(), _value.as_ref()).unwrap();
+    db.put(_key, _value).unwrap();
     println!("Item added to database");
 }
 
@@ -50,7 +50,7 @@ pub extern "C" fn get_byte_array_pointer(
     _key_array_pointer: *const c_char,
     _key_size: c_uint,
 ) -> *mut c_char {
-    let mut _key: slice = unsafe {
+    let _key = unsafe {
         assert!(!_key_array_pointer.is_null());
 
         std::slice::from_raw_parts(
@@ -63,7 +63,7 @@ pub extern "C" fn get_byte_array_pointer(
     println!("Database path: {:?}", path);
     let db = DB::open_default(path).unwrap();
     println!("Database instance: {:?}", db);
-    let loaded_data = db.get(_key.as_ref()).unwrap();
+    let loaded_data = db.get(_key).unwrap();
     println!("Loaded data: {:?}", loaded_data);
     let ptr: *mut c_char = loaded_data.unwrap().as_ptr();
     println!("Pointer: {:?}", ptr);
@@ -75,7 +75,7 @@ pub extern "C" fn get_byte_array_length(
     _key_array_pointer: *const c_char,
     _key_size: c_uint,
 ) -> c_uint {
-    let mut _key: slice  = unsafe {
+    let _key  = unsafe {
         assert!(!_key_array_pointer.is_null());
 
         std::slice::from_raw_parts(
@@ -88,7 +88,7 @@ pub extern "C" fn get_byte_array_length(
     println!("Database path: {:?}", path);
     let db = DB::open_default(path).unwrap();
     println!("Database instance: {:?}", db);
-    let loaded_data = db.get(_key.as_ref()).unwrap();
+    let loaded_data = db.get(_key).unwrap();
     println!("Loaded data: {:?}", loaded_data);
     let size: c_uint = loaded_data.unwrap().len().try_into().unwrap();
     println!("Size: {:?}", size);
