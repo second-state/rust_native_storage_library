@@ -17,11 +17,11 @@ char * load_bytes(const char *key);
 void free_pointer(char *);
 
 // New store/load (using byte array pointer and length)
-void store_byte_array(const uint32_t *_key_array_pointer, size_t _key_size, const uint32_t *_value_array_pointer, size_t _value_size);
-uint32_t * load_byte_array(const uint32_t *_key_array_pointer, size_t _key_size);
+void store_byte_array(const uintptr_t *_key_array_pointer, size_t _key_size, const uintptr_t *_value_array_pointer, size_t _value_size);
+uintptr_t * load_byte_array(const uintptr_t *_key_array_pointer, size_t _key_size);
 
 // New free pointer for the byte array approach
-void free_byte_array_pointer(uint32_t *);
+void free_byte_array_pointer(uintptr_t *);
 
 #ifdef __cplusplus
 }
