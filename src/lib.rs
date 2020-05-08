@@ -1,10 +1,10 @@
 extern crate cc;
 extern crate libc;
-use libc::{uint32_t};
+//use libc::{c_uint};
 use rocksdb::{DB};
 use std::convert::TryInto;
 use std::ffi::{CStr, CString};
-use std::os::raw::c_char
+use std::os::raw::{c_char, c_uint};
 
 fn type_of<T>(_: T) -> &'static str {
     type_name::<T>()
@@ -13,21 +13,21 @@ fn type_of<T>(_: T) -> &'static str {
 #[no_mangle]
 pub extern "C" fn store_byte_array(
     _key_array_pointer: *const c_char,
-    _key_size: uint32_t,
+    _key_size: c_uint,
     _value_array_pointer: *const c_char,
-    _value_size: uint32_t,
+    _value_size: c_uint,
 ) {
     let _key = unsafe {
         assert!(!_key_array_pointer.is_null());
 
-        std::slice::from_raw_parts(_key_array_pointer as *const c_char, (_key_size as uint32_t).try_into().unwrap());
+        std::slice::from_raw_parts(_key_array_pointer as *const c_char, (_key_size as c_uint).try_into().unwrap());
     };
     let _value = unsafe {
         assert!(!_value_array_pointer.is_null());
 
         std::slice::from_raw_parts(
             _value_array_pointer as *const c_char,
-            (_value_size as uint32_t).try_into().unwrap(),
+            (_value_size as c_uint).try_into().unwrap(),
         );
     };
     println!("Storing data, please wait ...");
@@ -42,12 +42,12 @@ pub extern "C" fn store_byte_array(
 #[no_mangle]
 pub extern "C" fn get_byte_array_pointer(
     _key_array_pointer: *const c_char,
-    _key_size: uint32_t,
+    _key_size: c_uint,
 ) -> *mut c_char {
     let _key = unsafe {
         assert!(!_key_array_pointer.is_null());
 
-        std::slice::from_raw_parts(_key_array_pointer as *const c_char, (_key_size as uint32_t).try_into().unwrap());
+        std::slice::from_raw_parts(_key_array_pointer as *const c_char, (_key_size as c_uint).try_into().unwrap());
     };
     println!("Loading data, please wait ...");
     let path = "/media/nvme/ssvm_database";
@@ -64,12 +64,12 @@ pub extern "C" fn get_byte_array_pointer(
 #[no_mangle]
 pub extern "C" fn get_byte_array_length(
     _key_array_pointer: *const c_char,
-    _key_size: uint32_t,
-) -> uint32_t {
+    _key_size: c_uint,
+) -> c_uint {
     let _key = unsafe {
         assert!(!_key_array_pointer.is_null());
 
-        std::slice::from_raw_parts(_key_array_pointer as *const c_char, (_key_size as uint32_t).try_into().unwrap());
+        std::slice::from_raw_parts(_key_array_pointer as *const c_char, (_key_size as c_uint).try_into().unwrap());
     };
     println!("Loading data, please wait ...");
     let path = "/media/nvme/ssvm_database";
@@ -78,7 +78,7 @@ pub extern "C" fn get_byte_array_length(
     println!("Database instance: {:?}", db);
     let loaded_data = db.get(_key).unwrap();
     println!("Loaded data: {:?}", loaded_data);
-    let size: uint32_t = loaded_data.unwrap().len().try_into().unwrap();
+    let size: c_uint = loaded_data.unwrap().len().try_into().unwrap();
     println!("Size: {:?}", size);
     size
 }
