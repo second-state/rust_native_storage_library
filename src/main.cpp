@@ -2,12 +2,25 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <cstdint>
 #include <cstring>
 #include "test_lib.h"
 using namespace std;
 
 int main()
 {
+    std::vector<uint8_t> Key = {0x03, 0x02, 0x01, 0x00, 0xFF, 0x00};
+    std::vector<uint8_t> Val = {0xFF, 0xFE, 0x00, 0x01, 0x02, 0x00, 0x03, 0x04};
+    store_byte_array(reinterpret_cast<char *>(&(Key[0])), Key.size(), reinterpret_cast<char *>(&(Val[0])), Val.size());
+    
+
+    // The code below worked really well
+    // i.e. store/load (using CStr as string) and store/load (using CStr as bytes)
+    // However these original functions will be excluded from the API
+    // Reason being any use of CStr means that the data is not allowed to have \0 \0x00 nul
+    // We need to accomodate these values as valid input. The DB will put and get arbitrary byte arrays so we need to ensure that this API does not offer less than that
+
+    /*
     // Setting up example key and value
     cout << "Starting main function ..." << endl;
     
@@ -59,7 +72,7 @@ int main()
     string loaded_string_2 = loaded_pointer_2;
     cout << "Retrieved the following data: " << loaded_string_2 << endl;
     free_pointer(loaded_pointer_2);
-
+    */
     
     return 0;
 }
