@@ -29,7 +29,7 @@ int main()
 
     //  Check actual values
     std::vector<uint8_t> Key3 = {0x03, 0x02, 0x01, 0x00, 0xFF, 0x00};
-    for (auto &Val : Key3) {
+    for (auto &Val3 : Key3) {
         printf("0x%02x ", Val3);
     }
 
