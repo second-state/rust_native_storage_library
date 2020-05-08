@@ -5,6 +5,7 @@ use rocksdb::{DB};
 use std::convert::TryInto;
 use std::ffi::{CStr, CString};
 use std::os::raw::{c_char, c_uint};
+use std::any::type_name;
 
 fn type_of<T>(_: T) -> &'static str {
     type_name::<T>()
@@ -30,6 +31,7 @@ pub extern "C" fn store_byte_array(
             (_value_size as c_uint).try_into().unwrap(),
         );
     };
+    println!("Key from raw parts has a type of: {:?}", type_of(_key));
     println!("Storing data, please wait ...");
     let path = "/media/nvme/ssvm_database";
     println!("Database path: {:?}", path);
@@ -56,7 +58,7 @@ pub extern "C" fn get_byte_array_pointer(
     println!("Database instance: {:?}", db);
     let loaded_data = db.get(_key).unwrap();
     println!("Loaded data: {:?}", loaded_data);
-    let mut ptr: *const c_char = loaded_data.unwrap().as_ptr();
+    let ptr: *mut c_char = loaded_data.unwrap().as_ptr();
     println!("Pointer: {:?}", ptr);
     ptr
 }
