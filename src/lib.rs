@@ -1,11 +1,11 @@
 extern crate cc;
 extern crate libc;
 //use libc::{c_uint};
-use rocksdb::{DB};
-use std::convert::TryInto;
-use std::ffi::{CStr, CString};
-use std::os::raw::{c_char, c_uint};
+use rocksdb::DB;
 use std::any::type_name;
+use std::convert::TryInto;
+use std::ffi::{CString};
+use std::os::raw::{c_char, c_uint};
 
 fn type_of<T>(_: T) -> &'static str {
     type_name::<T>()
@@ -18,12 +18,15 @@ pub extern "C" fn store_byte_array(
     _value_array_pointer: *const c_char,
     _value_size: c_uint,
 ) {
-    let _key = unsafe {
+    let mut _key = unsafe {
         assert!(!_key_array_pointer.is_null());
 
-        std::slice::from_raw_parts(_key_array_pointer as *const c_char, (_key_size as c_uint).try_into().unwrap());
+        std::slice::from_raw_parts(
+            _key_array_pointer as *const c_char,
+            (_key_size as c_uint).try_into().unwrap(),
+        );
     };
-    let _value = unsafe {
+    let mut _value = unsafe {
         assert!(!_value_array_pointer.is_null());
 
         std::slice::from_raw_parts(
@@ -37,7 +40,7 @@ pub extern "C" fn store_byte_array(
     println!("Database path: {:?}", path);
     let db = DB::open_default(path).unwrap();
     println!("Database instance: {:?}", db);
-    db.put(_key, _value).unwrap();
+    db.put(_key.as_ref(), _value.as_ref()).unwrap();
     println!("Item added to database");
 }
 
@@ -49,7 +52,10 @@ pub extern "C" fn get_byte_array_pointer(
     let _key = unsafe {
         assert!(!_key_array_pointer.is_null());
 
-        std::slice::from_raw_parts(_key_array_pointer as *const c_char, (_key_size as c_uint).try_into().unwrap());
+        std::slice::from_raw_parts(
+            _key_array_pointer as *const c_char,
+            (_key_size as c_uint).try_into().unwrap(),
+        );
     };
     println!("Loading data, please wait ...");
     let path = "/media/nvme/ssvm_database";
@@ -71,7 +77,10 @@ pub extern "C" fn get_byte_array_length(
     let _key = unsafe {
         assert!(!_key_array_pointer.is_null());
 
-        std::slice::from_raw_parts(_key_array_pointer as *const c_char, (_key_size as c_uint).try_into().unwrap());
+        std::slice::from_raw_parts(
+            _key_array_pointer as *const c_char,
+            (_key_size as c_uint).try_into().unwrap(),
+        );
     };
     println!("Loading data, please wait ...");
     let path = "/media/nvme/ssvm_database";
