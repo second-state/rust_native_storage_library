@@ -1,14 +1,9 @@
 use libc::size_t;
 use rocksdb::DB;
-use std::any::type_name;
 use std::convert::TryInto;
 use std::ffi::CString;
 use std::os::raw::c_char;
 use std::slice;
-
-fn type_of<T>(_: T) -> &'static str {
-    type_name::<T>()
-}
 
 #[no_mangle]
 pub extern "C" fn store_byte_array(
@@ -19,72 +14,46 @@ pub extern "C" fn store_byte_array(
 ) {
     let key = unsafe {
         assert!(!key_array_pointer.is_null());
-
         slice::from_raw_parts(key_array_pointer as *const _, key_size as usize)
     };
     let value = unsafe {
         assert!(!value_array_pointer.is_null());
-
         slice::from_raw_parts(value_array_pointer as *const _, value_size as usize)
     };
-    //println!("Key from raw parts has a type of: {:?}", type_of(key));
-    println!("Storing data, please wait ...");
     let path = "/media/nvme/ssvm_database";
-    println!("Database path: {:?}", path);
     let db = DB::open_default(path).unwrap();
-    println!("Database instance: {:?}", db);
-    //let u8slice_k = unsafe { &*(&key as *const _ as *const [u8]) };
-    //let u8slice_v = unsafe { &*(&value as *const _ as *const [u8]) };
-    //db.put(u8slice_k, u8slice_v).unwrap();
     db.put(key, value).unwrap();
-    println!("Item added to database");
 }
 
 #[no_mangle]
 pub extern "C" fn get_byte_array_pointer(
-    _key_array_pointer: *const c_char,
-    _key_size: size_t,
+    key_array_pointer: *const c_char,
+    key_size: size_t,
 ) -> *mut c_char {
-    let _key = unsafe {
-        assert!(!_key_array_pointer.is_null());
-
-        slice::from_raw_parts(_key_array_pointer as *const _, _key_size as usize)
+    let key = unsafe {
+        assert!(!key_array_pointer.is_null());
+        slice::from_raw_parts(key_array_pointer as *const _, key_size as usize)
     };
-    println!("Loading data, please wait ...");
     let path = "/media/nvme/ssvm_database";
-    println!("Database path: {:?}", path);
     let db = DB::open_default(path).unwrap();
-    println!("Database instance: {:?}", db);
-    //let u8slice = unsafe { &*(&_key as *const _ as *const [u8]) };
-    //let loaded_data = db.get(&u8slice).unwrap();
-    let loaded_data = db.get(&_key).unwrap();
-    println!("Loaded data: {:?}", loaded_data);
+    let loaded_data = db.get(&key).unwrap();
     let ptr: *mut c_char = loaded_data.unwrap().as_ptr() as *mut i8;
-    println!("Pointer: {:?}", ptr);
     ptr
 }
 
 #[no_mangle]
 pub extern "C" fn get_byte_array_length(
-    _key_array_pointer: *const c_char,
-    _key_size: size_t,
+    key_array_pointer: *const c_char,
+    key_size: size_t,
 ) -> size_t {
-    let _key = unsafe {
-        assert!(!_key_array_pointer.is_null());
-
-        slice::from_raw_parts(_key_array_pointer as *const _, _key_size as usize)
+    let key = unsafe {
+        assert!(!key_array_pointer.is_null());
+        slice::from_raw_parts(key_array_pointer as *const _, key_size as usize)
     };
-    println!("Loading data, please wait ...");
     let path = "/media/nvme/ssvm_database";
-    println!("Database path: {:?}", path);
     let db = DB::open_default(path).unwrap();
-    println!("Database instance: {:?}", db);
-    //let u8slice = unsafe { &*(&_key as *const _ as *const [u8]) };
-    //let loaded_data = db.get(&u8slice).unwrap();
-    let loaded_data = db.get(&_key).unwrap();
-    println!("Loaded data: {:?}", loaded_data);
+    let loaded_data = db.get(&key).unwrap();
     let size: size_t = loaded_data.unwrap().len().try_into().unwrap();
-    println!("Size: {:?}", size);
     size
 }
 
@@ -94,7 +63,6 @@ pub extern "C" fn free_byte_array_pointer(s: *mut c_char) {
         if s.is_null() {
             return;
         }
-        // TODO find best way to deallocate pointer
         CString::from_raw(s)
     };
 }
