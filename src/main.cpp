@@ -16,21 +16,21 @@ int main()
     store_byte_array(reinterpret_cast<char *>(&(Key[0])), Key.size(), reinterpret_cast<char *>(&(Val[0])), Val.size());
     
     // Get byte array length
-    std::vector<uint8_t> Key = {0x03, 0x02, 0x01, 0x00, 0xFF, 0x00};
-    std::vector<uint8_t> Val;
-    uint32_t Len = get_byte_array_length(reinterpret_cast<char *>(&(Key[0])), Key.size());
+    std::vector<uint8_t> Key2 = {0x03, 0x02, 0x01, 0x00, 0xFF, 0x00};
+    std::vector<uint8_t> Val2;
+    uint32_t Len = get_byte_array_length(reinterpret_cast<char *>(&(Key2[0])), Key2.size());
 
     // Get the byte array pointer
-    char *Ptr = get_byte_array_pointer(reinterpret_cast<char *>(&(Key[0])), Key.size());
-    std::copy_n(Ptr, Len, std::back_inserter(Val));
+    char *Ptr = get_byte_array_pointer(reinterpret_cast<char *>(&(Key2[0])), Key2.size());
+    std::copy_n(Ptr, Len, std::back_inserter(Val2));
 
     // Free the pointer
     free_byte_array_pointer(Ptr);
 
     //  Check actual values
-    std::vector<uint8_t> Key = {0x03, 0x02, 0x01, 0x00, 0xFF, 0x00};
-    for (auto &Val : Key) {
-        printf("0x%02x ", Val);
+    std::vector<uint8_t> Key3 = {0x03, 0x02, 0x01, 0x00, 0xFF, 0x00};
+    for (auto &Val3 : Key3) {
+        printf("0x%02x ", Val3);
     }
 
     // The code below worked really well

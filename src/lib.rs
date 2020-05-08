@@ -1,4 +1,4 @@
-use libc::{size_t};
+use libc::size_t;
 use rocksdb::DB;
 use std::any::type_name;
 use std::convert::TryInto;
