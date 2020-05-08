@@ -23,7 +23,7 @@ int main()
     // Get the byte array pointer
     char *Ptr = get_byte_array_pointer(reinterpret_cast<char *>(&(Key2[0])), Key2.size());
     std::copy_n(Ptr, Len, std::back_inserter(Val2));
-
+    printf("Ptr    = %p\n", (void *) Ptr);
     // Free the pointer
     free_byte_array_pointer(Ptr);
 
