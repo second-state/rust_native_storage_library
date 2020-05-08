@@ -1,22 +1,26 @@
 extern crate cc;
 extern crate libc;
-use libc::{c_char, uint32_t, size_t, uintptr_t};
-use rocksdb::{Options, DB, DBPinnableSlice};
+use libc::{c_char, size_t, uint32_t, uintptr_t};
+use rocksdb::{DBPinnableSlice, Options, DB};
 use std::ffi::{CStr, CString};
 use std::slice;
 
 #[no_mangle]
-pub extern "C" fn store_byte_array(_key_array_pointer: *const uintptr_t, _key_size: size_t, _value_array_pointer: *const uintptr_t, _value_size: size_t) {
+pub extern "C" fn store_byte_array(
+    _key_array_pointer: *const uintptr_t,
+    _key_size: size_t,
+    _value_array_pointer: *const uintptr_t,
+    _value_size: size_t,
+) {
     let _key = unsafe {
         assert!(!_key_array_pointer.is_null());
 
-        std::slice::from_raw_parts(_key_array_pointer as *const u32, _key_size as usize;
+        std::slice::from_raw_parts(_key_array_pointer as *const u32, _key_size as usize);
     };
     let _value = unsafe {
         assert!(!_value_array_pointer.is_null());
 
-        std::slice::from_raw_parts(_value_array_pointer as *const u32, _value_size as usize;
-
+        std::slice::from_raw_parts(_value_array_pointer as *const u32, _value_size as usize);
     };
     println!("Storing data, please wait ...");
     let path = "/media/nvme/ssvm_database";
@@ -28,11 +32,14 @@ pub extern "C" fn store_byte_array(_key_array_pointer: *const uintptr_t, _key_si
 }
 
 #[no_mangle]
-pub extern "C" fn load_byte_array(_key_array_pointer: *const uintptr_t, _key_size: size_t) -> *mut uintptr_t {
+pub extern "C" fn load_byte_array(
+    _key_array_pointer: *const uintptr_t,
+    _key_size: size_t,
+) -> *mut uintptr_t {
     let _key = unsafe {
         assert!(!_key.is_null());
 
-        std::slice::from_raw_parts(_key_array_pointer as *const u32, _key_size as usize;
+        std::slice::from_raw_parts(_key_array_pointer as *const u32, _key_size as usize);
     };
     println!("Loading data, please wait ...");
     let path = "/media/nvme/ssvm_database";
@@ -59,7 +66,11 @@ pub extern "C" fn free_byte_array_pointer(s: *const uintptr_t) {
     };
 }
 
-
+// The code below worked really well
+// i.e. store/load (using CStr as string) and store/load (using CStr as bytes)
+// However these original functions will be excluded from the API
+// Reason being any use of CStr means that the data is not allowed to have \0 \0x00 nul
+// We need to accomodate these values as valid input. The DB will put and get arbitrary byte arrays so we need to ensure that this API does not offer less than that
 /*
 #[no_mangle]
 pub extern "C" fn store_bytes(_key: *const c_char, _value: *const c_char) {
