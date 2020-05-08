@@ -1,10 +1,7 @@
-//extern crate cc;
-//extern crate libc;
-//use libc::{c_uint};
 use rocksdb::DB;
 use std::any::type_name;
 use std::convert::TryInto;
-use std::ffi::CString;
+use std::ffi::{CString};
 use std::os::raw::{c_char, c_uint};
 
 fn type_of<T>(_: T) -> &'static str {
@@ -21,12 +18,18 @@ pub extern "C" fn store_byte_array(
     let _key = unsafe {
         assert!(!_key_array_pointer.is_null());
 
-        std::slice::from_raw_parts(_key_array_pointer, _key_size);
+        std::slice::from_raw_parts(
+            _key_array_pointer as *const c_char,
+            (_key_size as c_uint).try_into().unwrap(),
+        );
     };
     let _value = unsafe {
         assert!(!_value_array_pointer.is_null());
 
-        std::slice::from_raw_parts(_value_array_pointer, _value_size);
+        std::slice::from_raw_parts(
+            _value_array_pointer as *const c_char,
+            (_value_size as c_uint).try_into().unwrap(),
+        );
     };
     println!("Key from raw parts has a type of: {:?}", type_of(_key));
     println!("Storing data, please wait ...");
@@ -68,7 +71,7 @@ pub extern "C" fn get_byte_array_length(
     _key_array_pointer: *const c_char,
     _key_size: c_uint,
 ) -> c_uint {
-    let _key = unsafe {
+    let _key  = unsafe {
         assert!(!_key_array_pointer.is_null());
 
         std::slice::from_raw_parts(
