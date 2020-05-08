@@ -1,12 +1,12 @@
-extern crate cc;
-extern crate libc;
+//extern crate cc;
+//extern crate libc;
 //use libc::{c_uint};
 use rocksdb::DB;
 use std::any::type_name;
 use std::convert::TryInto;
 use std::ffi::{CString};
 use std::os::raw::{c_char, c_uint};
-use std::slice
+use std::slice;
 
 fn type_of<T>(_: T) -> &'static str {
     type_name::<T>()
