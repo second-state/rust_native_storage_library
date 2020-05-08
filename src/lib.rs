@@ -2,8 +2,6 @@ extern crate cc;
 extern crate libc;
 use libc::{c_char, uint32_t};
 use rocksdb::{DBPinnableSlice, Options, DB};
-use std::ffi::{CStr, CString};
-use std::slice;
 
 #[no_mangle]
 pub extern "C" fn store_byte_array(
@@ -15,14 +13,14 @@ pub extern "C" fn store_byte_array(
     let _key = unsafe {
         assert!(!_key_array_pointer.is_null());
 
-        std::slice::from_raw_parts(_key_array_pointer as *const c_char, _key_size as uint32_t);
+        std::slice::from_raw_parts(_key_array_pointer as *const c_char, (_key_size as uint32_t).try_into().unwrap());
     };
     let _value = unsafe {
         assert!(!_value_array_pointer.is_null());
 
         std::slice::from_raw_parts(
             _value_array_pointer as *const c_char,
-            _value_size as uint32_t,
+            (_value_size as uint32_t).try_into().unwrap(),
         );
     };
     println!("Storing data, please wait ...");
@@ -40,9 +38,9 @@ pub extern "C" fn get_byte_array_pointer(
     _key_size: uint32_t,
 ) -> *mut c_char {
     let _key = unsafe {
-        assert!(!_key.is_null());
+        assert!(!_key_array_pointer.is_null());
 
-        std::slice::from_raw_parts(_key_array_pointer as *const c_char, _key_size as uint32_t);
+        std::slice::from_raw_parts(_key_array_pointer as *const c_char, (_key_size as uint32_t).try_into().unwrap());
     };
     println!("Loading data, please wait ...");
     let path = "/media/nvme/ssvm_database";
@@ -62,9 +60,9 @@ pub extern "C" fn get_byte_array_length(
     _key_size: uint32_t,
 ) -> uint32_t {
     let _key = unsafe {
-        assert!(!_key.is_null());
+        assert!(!_key_array_pointer.is_null());
 
-        std::slice::from_raw_parts(_key_array_pointer as *const c_char, _key_size as uint32_t);
+        std::slice::from_raw_parts(_key_array_pointer as *const c_char, (_key_size as uint32_t).try_into().unwrap());
     };
     println!("Loading data, please wait ...");
     let path = "/media/nvme/ssvm_database";
@@ -73,7 +71,7 @@ pub extern "C" fn get_byte_array_length(
     println!("Database instance: {:?}", db);
     let loaded_data = db.get(_key).unwrap();
     println!("Loaded data: {:?}", loaded_data);
-    let size: uint32_t = loaded_data.len();
+    let size: uint32_t = loaded_data.unwrap().len();
     println!("Size: {:?}", size);
     size
 }
