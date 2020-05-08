@@ -37,7 +37,7 @@ pub extern "C" fn store_byte_array(
     println!("Database path: {:?}", path);
     let db = DB::open_default(path).unwrap();
     println!("Database instance: {:?}", db);
-    db.put(_key, _value).unwrap();
+    db.put(_key.try_into().expect("key_error"), _value.try_into().expect("value_error")).unwrap();
     println!("Item added to database");
 }
 
