@@ -28,7 +28,7 @@ int main()
     printf("Ptr    = %p\n", (void *) Ptr);
 
     // Print the values  
-    printf("Values available in C++");   
+    printf("Values available in C++\n");   
     for (auto &PtrVal : Val2) {
         printf("0x%02x ", PtrVal);
     }
