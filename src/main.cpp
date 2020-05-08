@@ -4,15 +4,34 @@
 #include <vector>
 #include <cstdint>
 #include <cstring>
+#include <algorithm>
 #include "test_lib.h"
 using namespace std;
 
 int main()
 {
+    // Store byte array
     std::vector<uint8_t> Key = {0x03, 0x02, 0x01, 0x00, 0xFF, 0x00};
     std::vector<uint8_t> Val = {0xFF, 0xFE, 0x00, 0x01, 0x02, 0x00, 0x03, 0x04};
     store_byte_array(reinterpret_cast<char *>(&(Key[0])), Key.size(), reinterpret_cast<char *>(&(Val[0])), Val.size());
     
+    // Get byte array length
+    std::vector<uint8_t> Key = {0x03, 0x02, 0x01, 0x00, 0xFF, 0x00};
+    std::vector<uint8_t> Val;
+    uint32_t Len = get_byte_array_length(reinterpret_cast<char *>(&(Key[0])), Key.size());
+
+    // Get the byte array pointer
+    char *Ptr = get_byte_array_pointer(reinterpret_cast<char *>(&(Key[0])), Key.size());
+    std::copy_n(Ptr, Len, std::back_inserter(Val));
+
+    // Free the pointer
+    free_byte_array_pointer(Ptr);
+
+    //  Check actual values
+    std::vector<uint8_t> Key = {0x03, 0x02, 0x01, 0x00, 0xFF, 0x00};
+    for (auto &Val : Key) {
+        printf("0x%02x ", Val);
+    }
 
     // The code below worked really well
     // i.e. store/load (using CStr as string) and store/load (using CStr as bytes)
