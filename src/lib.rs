@@ -4,6 +4,8 @@ use std::convert::TryInto;
 use std::ffi::CString;
 use std::os::raw::c_char;
 use std::slice;
+use std::alloc::{dealloc, Layout};
+use std::ptr;
 
 #[no_mangle]
 pub extern "C" fn store_byte_array(
@@ -37,8 +39,8 @@ pub extern "C" fn get_byte_array_pointer(
     let path = "/media/nvme/ssvm_database";
     let db = DB::open_default(path).unwrap();
     let loaded_data = db.get(&key).unwrap();
-    let ptr = loaded_data.as_ref().unwrap().as_ptr() as *mut _;
-    let box_ptr = unsafe { Box::from_raw(ptr) };
+    let ptr1 = loaded_data.as_ref().unwrap().as_ptr() as *mut _;
+    let box_ptr = unsafe { Box::from_raw(ptr1) };
     *box_ptr
 }
 
@@ -65,8 +67,10 @@ pub extern "C" fn free_byte_array_pointer(s: *mut c_char) {
             return;
         }
         let new_box = unsafe { Box::from_raw(s) };
-        Box::into_raw(new_box);
-    };
+        let p = Box::into_raw(new_box);
+        ptr::drop_in_place(p);
+        dealloc(p as *mut u8, Layout::new::<String>());
+    }
 }
 
 // The code below worked really well
