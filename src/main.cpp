@@ -27,7 +27,8 @@ int main()
     // Print the pointer
     printf("Ptr    = %p\n", (void *) Ptr);
 
-    // Print the values     
+    // Print the values  
+    printf("Values available in C++");   
     for (auto &PtrVal : Val2) {
         printf("0x%02x ", PtrVal);
     }
@@ -37,13 +38,13 @@ int main()
 
     // Try and access the pointer again after free
         // Print the pointer
-    printf("Pointer is now free:    = %p\n", (void *) Ptr);
+    //printf("\nPointer is now free:    = %p\n", (void *) Ptr);
 
     //  Check actual values
-    std::vector<uint8_t> Key3 = {0x03, 0x02, 0x01, 0x00, 0xFF, 0x00};
-    for (auto &Val3 : Key3) {
-        printf("0x%02x ", Val3);
-    }
+    //std::vector<uint8_t> Key3 = {0x03, 0x02, 0x01, 0x00, 0xFF, 0x00};
+    //for (auto &Val3 : Key3) {
+    //    printf("0x%02x ", Val3);
+    //}
 
     // The code below worked really well
     // i.e. store/load (using CStr as string) and store/load (using CStr as bytes)
