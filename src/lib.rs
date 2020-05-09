@@ -65,11 +65,13 @@ pub extern "C" fn free_byte_array_pointer(s: *mut c_char) {
         assert!(!s.is_null());
         Box::from_raw(s)
     };
+    /*
     let p = Box::into_raw(new_box);
     unsafe {
         ptr::drop_in_place(p);
         dealloc(p as *mut u8, Layout::for_value(&*p));
     };
+    */
 }
 
 // The code below worked really well
