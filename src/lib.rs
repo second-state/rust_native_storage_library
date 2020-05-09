@@ -70,7 +70,7 @@ pub extern "C" fn free_byte_array_pointer(s: *mut c_char) {
         let p = Box::into_raw(new_box);
         ptr::drop_in_place(p);
         dealloc(p as *mut u8, Layout::for_value(&*p));
-    }
+    };
 }
 
 // The code below worked really well
