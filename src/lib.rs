@@ -62,9 +62,7 @@ pub extern "C" fn get_byte_array_length(
 #[no_mangle]
 pub extern "C" fn free_byte_array_pointer(s: *mut c_char) {
     let new_box = unsafe {
-        if s.is_null() {
-            return;
-        }
+        assert!(!s.is_null());
         Box::from_raw(s)
     };
     let p = Box::into_raw(new_box);
