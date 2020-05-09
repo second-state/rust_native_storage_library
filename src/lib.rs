@@ -2,7 +2,6 @@ use libc::size_t;
 use rocksdb::DB;
 use std::alloc::{dealloc, Layout};
 use std::convert::TryInto;
-use std::ffi::CString;
 use std::os::raw::c_char;
 use std::ptr;
 use std::slice;
@@ -62,12 +61,12 @@ pub extern "C" fn get_byte_array_length(
 
 #[no_mangle]
 pub extern "C" fn free_byte_array_pointer(s: *mut c_char) {
-    unsafe {
+    let new_box = unsafe {
         if s.is_null() {
             return;
         }
+        Box::from_raw(s)
     };
-    let new_box = Box::from_raw(s);
     let p = Box::into_raw(new_box);
     unsafe {
         ptr::drop_in_place(p);
