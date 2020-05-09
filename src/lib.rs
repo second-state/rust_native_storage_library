@@ -21,8 +21,8 @@ pub extern "C" fn store_byte_array(
         assert!(!value_array_pointer.is_null());
         slice::from_raw_parts(value_array_pointer as *const _, value_size as usize)
     };
-    let path = "/media/nvme/ssvm_database_20200509";
-    let db = DB::open_default(path).unwrap();
+    let db_path = "/media/nvme/ssvm_database";
+    let db = DB::open_default(db_path).unwrap();
     db.put(key, value).unwrap();
 }
 
@@ -35,8 +35,8 @@ pub extern "C" fn get_byte_array_pointer(
         assert!(!key_array_pointer.is_null());
         slice::from_raw_parts(key_array_pointer as *const _, key_size as usize)
     };
-    let path = "/media/nvme/ssvm_database_20200509";
-    let db = DB::open_default(path).unwrap();
+    let db_path = "/media/nvme/ssvm_database";
+    let db = DB::open_default(db_path).unwrap();
     let loaded_data = db.get(&key).unwrap();
     let ptr1 = loaded_data.as_ref().unwrap().as_ptr() as *mut _;
     let box_ptr = unsafe { Box::from_raw(ptr1) };
@@ -52,8 +52,8 @@ pub extern "C" fn get_byte_array_length(
         assert!(!key_array_pointer.is_null());
         slice::from_raw_parts(key_array_pointer as *const _, key_size as usize)
     };
-    let path = "/media/nvme/ssvm_database_20200509";
-    let db = DB::open_default(path).unwrap();
+    let db_path = "/media/nvme/ssvm_database";
+    let db = DB::open_default(db_path).unwrap();
     let loaded_data = db.get(&key).unwrap();
     let size: size_t = loaded_data.unwrap().len().try_into().unwrap();
     size
