@@ -66,7 +66,7 @@ pub extern "C" fn free_byte_array_pointer(s: *mut c_char) {
         if s.is_null() {
             return;
         }
-        let new_box = unsafe { Box::from_raw(s) };
+        let new_box = Box::from_raw(s);
         let p = Box::into_raw(new_box);
         ptr::drop_in_place(p);
         dealloc(p as *mut u8, Layout::new::<String>());
