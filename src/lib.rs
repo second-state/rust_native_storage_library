@@ -39,8 +39,8 @@ pub extern "C" fn get_byte_array_pointer(
     let db = DB::open_default(db_path).unwrap();
     let loaded_data = db.get(&key).unwrap();
     let ptr1 = loaded_data.as_ref().unwrap().as_ptr() as *mut _;
-    let box_ptr = unsafe { Box::from_raw(ptr1) };
-    *box_ptr
+    let a_box = unsafe { Box::from_raw(ptr1) };
+    Box::into_raw(a_box)
 }
 
 #[no_mangle]
