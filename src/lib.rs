@@ -37,10 +37,10 @@ pub extern "C" fn get_byte_array_pointer(
     };
     let db_path = "/media/nvme/ssvm_database";
     let db = DB::open_default(db_path).unwrap();
-    let loaded_data = db.get(&key).unwrap();
-    let ptr1 = loaded_data.as_ref().unwrap().as_ptr() as *mut _;
-    let a_box = unsafe { Box::from_raw(ptr1) };
-    Box::into_raw(a_box)
+    let loaded_data = db.get(&key).unwrap().unwrap();
+    let data = loaded_data.as_ptr() as *mut _;
+    std::mem::forget(loaded_data);
+    data
 }
 
 #[no_mangle]
@@ -60,18 +60,12 @@ pub extern "C" fn get_byte_array_length(
 }
 
 #[no_mangle]
-pub extern "C" fn free_byte_array_pointer(s: *mut c_char) {
-    let new_box = unsafe {
-        assert!(!s.is_null());
-        Box::from_raw(s)
-    };
-    /*
-    let p = Box::into_raw(new_box);
+pub extern "C" fn free_byte_array_pointer(value_array_pointer: *mut c_char, value_size: size_t) {
+    let s = unsafe { std::slice::from_raw_parts_mut(value_array_pointer, value_size) };
+    let s = s.as_mut_ptr();
     unsafe {
-        ptr::drop_in_place(p);
-        dealloc(p as *mut u8, Layout::for_value(&*p));
-    };
-    */
+        Box::from_raw(s);
+    }
 }
 
 // The code below worked really well
