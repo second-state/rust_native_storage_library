@@ -33,7 +33,7 @@ int main()
         printf("0x%02x ", PtrVal);
     }
     // Free the pointer
-    free_byte_array_pointer(Ptr);
+    free_byte_array_pointer(Ptr, Len);
 
     printf("\n");
 
