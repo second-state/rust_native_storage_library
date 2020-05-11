@@ -1,30 +1,42 @@
-#ifndef _TESTLIB_H
-#define _TESTLIB_H
- 
-#ifdef __cplusplus
-extern "C"{
-#endif
+#pragma once
+#include "rust/cxx.h"
+#include <memory>
+#include <string>
 
-// Original store/load (using CStr as string)
-//void store_data(const char *key, const char *value);
-//char * load_data(const char *key);
+namespace io {
+namespace second_state {
+namespace rust_native_storage_library {
 
-// Original store/load (using CStr as bytes)
-//void store_bytes(const char *key, const char *value);
-//char * load_bytes(const char *key);
+class Key_Value {
+  private:
+  std::vector<uint8_t> key;
+  std::vector<uint8_t> value;
+  
+  public:
+  Key_Value() {
+    printf("KeyValue instantiated, use set_key and set_value to populate\n"); 
+  } 
+  std::vector<uint8_t> get_key(void) {
+      return key;
+  }
+    std::vector<uint8_t> get_value(void) {
+      return value;
+  }
+  void set_key(std::vector<uint8_t> _key) {
+      key = _key;
+  }
+  void set_value(std::vector<uint8_t> _value) {
+      value = _value;
+  }
 
-// Original free pointer for the above functions
-//void free_pointer(char *);
+};
 
-// New store/load (using byte array pointer and length)
-void store_byte_array(const char *_key_array_pointer, size_t _key_size, const char *_value_array_pointer, size_t _value_size);
-char * get_byte_array_pointer(const char *_key_array_pointer, size_t _key_size);
-size_t get_byte_array_length(const char *_key_array_pointer, size_t _key_size);
+struct SharedThing;
 
-// New free pointer for the byte array approach
-void free_byte_array_pointer(char *);
+std::unique_ptr<Key_Value> make_demo(rust::Str appname);
+const std::string &get_name(const ThingC &thing);
+void do_thing(SharedThing state);
 
-#ifdef __cplusplus
-}
-#endif
-#endif
+        } //namespace rust_native_storage_library 
+    } //namespace second_state 
+} //namespace io 
