@@ -22,7 +22,7 @@ char * get_byte_array_pointer(const char *_key_array_pointer, size_t _key_size);
 size_t get_byte_array_length(const char *_key_array_pointer, size_t _key_size);
 
 // New free pointer for the byte array approach
-void free_byte_array_pointer(char *);
+void free_byte_array_pointer(char *value_array_pointer, size_t value_size);
 
 #ifdef __cplusplus
 }
