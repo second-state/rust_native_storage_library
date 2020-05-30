@@ -31,7 +31,7 @@ class Key_Value {
 
 };
 
-struct SharedThing;
+struct Key_Value;
 
 std::unique_ptr<Key_Value> make_demo(rust::Str appname);
 const std::string &get_name(const ThingC &thing);
