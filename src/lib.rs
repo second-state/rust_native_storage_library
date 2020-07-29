@@ -22,8 +22,8 @@ pub extern "C" fn store_byte_array(
     };
     let db_path = match env::var("STORAGE_INTERFACE_DB_PATH") {
         Ok(val) => val,
-        Err(e) => "/media/nvme/ssvm_database",
-    }
+        _ => "/media/nvme/ssvm_database".to_string(),
+    };
     let db = DB::open_default(db_path).unwrap();
     db.put(key, value).unwrap();
 }
@@ -39,8 +39,8 @@ pub extern "C" fn get_byte_array_pointer(
     };
     let db_path = match env::var("STORAGE_INTERFACE_DB_PATH") {
         Ok(val) => val,
-        Err(e) => "/media/nvme/ssvm_database",
-    }
+        _ => "/media/nvme/ssvm_database".to_string(),
+    };
     let db = DB::open_default(db_path).unwrap();
     let loaded_data = db.get(&key).unwrap().unwrap();
     let data = loaded_data.as_ptr() as *mut _;
@@ -59,8 +59,8 @@ pub extern "C" fn get_byte_array_length(
     };
     let db_path = match env::var("STORAGE_INTERFACE_DB_PATH") {
         Ok(val) => val,
-        Err(e) => "/media/nvme/ssvm_database",
-    }
+        _ => "/media/nvme/ssvm_database".to_string(),
+    };
     let db = DB::open_default(db_path).unwrap();
     let loaded_data = db.get(&key).unwrap();
     let size: size_t = loaded_data.unwrap().len().try_into().unwrap();
