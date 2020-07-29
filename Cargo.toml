@@ -15,5 +15,5 @@ libc = "0.2.69"
 
 [lib]
 name = "rust_native_storage_library"
-crate-type = ["cdylib"]
+crate-type = ["staticlib"]
 path = "src/lib.rs"
