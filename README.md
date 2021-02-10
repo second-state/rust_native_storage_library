@@ -97,13 +97,14 @@ df -h
 ```
 ```bash
 #ensure that the /media/nvme directory is owned by ubuntu by typing ls -la /media/nvme If it is not then type the following command
-sudo chown -R ubuntu:ubuntu /media/nvme/
+sudo chown -R $USER:$USER /media/nvme/
 ```
 
 # Installing database (RocksDB)
 Create directory for database
 ```bash
 mkdir /media/nvme/ssvm_database
+sudo chown -R $USER:$USER /media/nvme/ssvm_database
 ```
 
 Install system requirements
