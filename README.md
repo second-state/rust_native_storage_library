@@ -99,8 +99,6 @@ df -h
 #ensure that the /media/nvme directory is owned by ubuntu by typing ls -la /media/nvme If it is not then type the following command
 sudo chown -R $USER:$USER /media/nvme/
 ```
-
-# Installing database (RocksDB)
 Create directory for database
 ```bash
 mkdir /media/nvme/ssvm_database
@@ -112,11 +110,26 @@ Install system requirements
 sudo apt-get -y install devscripts debhelper build-essential fakeroot zlib1g-dev libbz2-dev libsnappy-dev libgflags-dev libzstd-dev make clang pkg-config libssl-dev
 ```
 Install RocksDB
+
+# Installing database (RocksDB)
+
+## From original source (recommended)
+
+```
+git clone https://github.com/facebook/rocksdb.git
+cd rocksdb
+make -j6 shared_lib
+```
+
+## Or, Using third-party script
+
 ```
 git clone https://github.com/ulikoehler/deb-buildscripts.git
 cd deb-buildscripts
 ./deb-rocksdb.py
 ```
+# Extra information (no action required)
+
 Configure RocksDB - this (setting the data dir and options) is all done in the source code, as per the example below. There is nothing to do here ... please move to the next section.
 ```
 let path = "/media/nvme/ssvm_database";
